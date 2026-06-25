@@ -147,7 +147,7 @@ input:focus, select:focus { outline: 2px solid rgba(8,127,140,.25); border-color
 .page-size-control { display: flex; grid-template-columns: auto 74px; align-items: center; gap: 8px; }
 .page-size-control select { min-height: 34px; }
 .product-table-wrap { overflow: auto; max-height: 760px; border: 1px solid var(--line); border-radius: 7px; background: #fff; }
-.product-table { width: 100%; min-width: 1280px; border-collapse: collapse; table-layout: fixed; }
+.product-table { width: 100%; min-width: 1360px; border-collapse: collapse; table-layout: fixed; }
 .product-table th {
   position: sticky; top: 0; z-index: 3; height: 46px; padding: 10px 12px;
   border-bottom: 1px solid var(--line); background: #f2f2ef; color: #555;
@@ -159,9 +159,9 @@ input:focus, select:focus { outline: 2px solid rgba(8,127,140,.25); border-color
 .product-table th:nth-child(1) { width: 86px; }
 .product-table th:nth-child(2) { width: 220px; }
 .product-table th:nth-child(3) { width: 155px; }
-.product-table th:nth-child(4) { width: 170px; }
-.product-table th:nth-child(5) { width: 245px; }
-.product-table th:nth-child(6) { width: 105px; }
+.product-table th:nth-child(4) { width: 160px; }
+.product-table th:nth-child(5) { width: 230px; }
+.product-table th:nth-child(6) { width: 210px; }
 .product-table th:nth-child(7) { width: 105px; }
 .product-table th:nth-child(8) { width: 90px; }
 .product-table th:nth-child(9) { width: 48px; }
@@ -183,6 +183,13 @@ input:focus, select:focus { outline: 2px solid rgba(8,127,140,.25); border-color
 .numeric-cell strong { display: block; font-size: 14px; }
 .color-cell strong { display: block; font-size: 12px; line-height: 1.35; }
 .color-cell span { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; }
+.table-color-list { display: flex; flex-wrap: wrap; gap: 4px; }
+.table-color-list span {
+  display: inline-flex; align-items: center; min-height: 21px; margin: 0; padding: 1px 6px;
+  border: 1px solid var(--line); border-radius: 4px; background: #f7f7f4;
+  color: #333; font-size: 10px;
+}
+.color-cell small { display: block; margin-top: 6px; color: var(--muted); font-size: 10px; }
 .table-price strong, .table-price del { display: block; }
 .table-price strong { font-size: 14px; }
 .table-price del { margin-top: 4px; color: var(--muted); font-size: 11px; }

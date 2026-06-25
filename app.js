@@ -372,17 +372,65 @@ function innovationDetails(innovations) {
   </details>`;
 }
 
+function consolidateProducts(items) {
+  const grouped = new Map();
+  items.forEach((item) => {
+    const id = item.source_product_id || item.id;
+    if (!grouped.has(id)) {
+      grouped.set(id, {
+        ...item,
+        id,
+        url: `https://gqsize.com/products/${item.handle}`,
+        colors: [],
+        materials: [],
+        variant_count: 0,
+        available_variant_count: 0,
+        min_price: null,
+        max_price: null,
+        compare_at_price: null,
+        recommendation_groups: [],
+        availability: "Sold out",
+      });
+    }
+    const product = grouped.get(id);
+    product.colors.push(item.color || (item.colors || [])[0]);
+    if (item.material && item.material !== "ไม่ระบุ") product.materials.push(item.material);
+    product.variant_count += item.variant_count || 0;
+    product.available_variant_count += item.available_variant_count || 0;
+    product.min_price = product.min_price == null
+      ? item.min_price
+      : Math.min(product.min_price, item.min_price ?? product.min_price);
+    product.max_price = product.max_price == null
+      ? item.max_price
+      : Math.max(product.max_price, item.max_price ?? product.max_price);
+    product.compare_at_price = Math.max(product.compare_at_price || 0, item.compare_at_price || 0) || null;
+    product.recommendation_groups.push(...(item.recommendation_groups || []));
+    if (item.availability === "In stock") {
+      product.availability = "In stock";
+      if (!product.image || product.image === grouped.get(id).image) product.image = item.image;
+    }
+  });
+  return [...grouped.values()].map((product) => ({
+    ...product,
+    colors: [...new Set(product.colors.filter(Boolean))],
+    materials: [...new Set(product.materials)],
+    recommendation_groups: [...new Set(product.recommendation_groups)],
+    color_count: new Set(product.colors.filter(Boolean)).size,
+  }));
+}
+
 function renderProducts(items) {
-  els.visibleCount.textContent = `${number.format(items.length)} รายการ`;
-  if (!items.length) {
+  const consolidated = consolidateProducts(items);
+  els.visibleCount.textContent = `${number.format(consolidated.length)} รุ่น`;
+  if (!consolidated.length) {
     els.productGrid.innerHTML = `<div class="empty-state"><strong>ไม่พบสินค้าที่ตรงกับตัวกรอง</strong><span>ลองล้างตัวกรองหรือเปลี่ยนคำค้นหา</span></div>`;
     els.pagination.innerHTML = "";
     return;
   }
-  const totalPages = Math.max(1, Math.ceil(items.length / state.pageSize));
+  const totalPages = Math.max(1, Math.ceil(consolidated.length / state.pageSize));
   state.page = Math.min(state.page, totalPages);
   const start = (state.page - 1) * state.pageSize;
-  const pageItems = items.slice(start, start + state.pageSize);
+  const pageItems = consolidated.slice(start, start + state.pageSize);
   els.productGrid.innerHTML = `<div class="product-table-wrap">
     <table class="product-table">
       <thead>
@@ -423,7 +471,10 @@ function renderProducts(items) {
         <span class="cell-secondary">${escapeHtml(item.product_type)}</span>
       </td>
       <td class="material-cell">
-        <span title="${escapeHtml(item.material || "ไม่ระบุ")}">${escapeHtml(item.material || "ไม่ระบุ")}</span>
+        <span title="${escapeHtml(item.materials.join(", ") || "ไม่ระบุ")}">
+          ${escapeHtml(item.materials.slice(0, 2).join(", ") || "ไม่ระบุ")}
+          ${item.materials.length > 2 ? ` +${number.format(item.materials.length - 2)}` : ""}
+        </span>
       </td>
       <td class="innovation-cell">
         ${innovations.length
@@ -433,8 +484,10 @@ function renderProducts(items) {
           : `<span class="no-innovation">ไม่พบข้อมูล</span>`}
       </td>
       <td class="color-cell">
-        <strong>${escapeHtml(item.color || (item.colors || [])[0] || "ไม่ระบุสี")}</strong>
-        <span>${number.format(item.variant_count)} ไซซ์ / ตัวเลือก</span>
+        <div class="table-color-list" title="${escapeHtml(item.colors.join(", "))}">
+          ${item.colors.map((color) => `<span>${escapeHtml(color)}</span>`).join("")}
+        </div>
+        <small>${number.format(item.color_count)} สี · ${number.format(item.variant_count)} ไซซ์ / ตัวเลือก</small>
       </td>
       <td class="table-price">
         <strong>${baht.format(item.min_price || 0)}</strong>
@@ -446,7 +499,7 @@ function renderProducts(items) {
   }).join("")}</tbody>
     </table>
   </div>`;
-  renderPagination(items.length, totalPages, start, pageItems.length);
+  renderPagination(consolidated.length, totalPages, start, pageItems.length);
 }
 
 function renderPagination(totalItems, totalPages, start, visibleItems) {
