@@ -2,6 +2,8 @@
 
 เว็บไซต์สำหรับศึกษา Product Offering ของ GQSize จาก `https://gqsize.com/collections/all`
 
+Public website: `https://gq-product-dashboard.onrender.com`
+
 ## ความสามารถหลัก
 
 - ค้นหา กรอง และเรียงสินค้าตามแบรนด์ ประเภท ซีรีส์ ราคา สต็อก และ Innovation
