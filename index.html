@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>GQ Product & Innovation Explorer</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">GQSize Brand Study</p>
+        <h1>Product & Innovation <span class="title-tail">Explorer</span></h1>
+        <p class="hero-copy">สำรวจสินค้า ราคา กลุ่มเป้าหมาย และนวัตกรรมของ GQ ในที่เดียว</p>
+      </div>
+      <div class="top-actions">
+        <button class="button" id="refreshButton" type="button">อัปเดตข้อมูล</button>
+        <a class="button" href="data/gq_products.csv" download>ดาวน์โหลด CSV</a>
+        <a class="button ghost" href="https://gqsize.com/collections/all" target="_blank" rel="noreferrer">ดูเว็บไซต์ GQ</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="meta-band">
+        <div><span>อัปเดตล่าสุด</span><strong id="scrapedAt">-</strong></div>
+        <div><span>แหล่งข้อมูล</span><strong>gqsize.com/collections/all</strong></div>
+      </section>
+
+      <section class="kpi-grid" id="kpis"></section>
+
+      <section class="controls" aria-label="ตัวกรองสินค้า">
+        <label class="search-box">
+          <span>ค้นหาสินค้า</span>
+          <input id="searchInput" type="search" placeholder="ชื่อสินค้า ซีรีส์ หรือนวัตกรรม" />
+        </label>
+        <label><span>ประเภทสินค้า</span><select id="functionFilter"></select></label>
+        <label><span>ซีรีส์</span><select id="seriesFilter"></select></label>
+        <label><span>Innovation</span><select id="innovationFilter"></select></label>
+        <label>
+          <span>สินค้าแนะนำ</span>
+          <select id="recommendedFilter">
+            <option value="">ทั้งหมด</option>
+            <option value="new">สินค้าใหม่</option>
+            <option value="bestseller">สินค้าขายดี</option>
+            <option value="bearsize">ไซส์หมี</option>
+            <option value="scrubs">ชุดสครับ</option>
+          </select>
+        </label>
+        <label>
+          <span>สถานะสินค้า</span>
+          <select id="stockFilter">
+            <option value="">ทั้งหมด</option>
+            <option value="In stock">มีสินค้า</option>
+            <option value="Sold out">สินค้าหมด</option>
+          </select>
+        </label>
+        <label>
+          <span>เรียงตาม</span>
+          <select id="sortSelect">
+            <option value="innovationDesc">Innovation มากที่สุด</option>
+            <option value="priceAsc">ราคาต่ำ - สูง</option>
+            <option value="priceDesc">ราคาสูง - ต่ำ</option>
+            <option value="discountDesc">ส่วนลดสูงที่สุด</option>
+            <option value="variantsDesc">ตัวเลือกมากที่สุด</option>
+            <option value="newest">สินค้าใหม่ที่สุด</option>
+            <option value="name">ชื่อสินค้า</option>
+          </select>
+        </label>
+        <button class="reset-button" id="resetButton" type="button">ล้างตัวกรอง</button>
+      </section>
+
+      <section class="active-filters" id="activeFilters" aria-live="polite"></section>
+
+      <section class="mix-dashboard">
+        <article class="mix-panel">
+          <div class="chart-kicker">Collection Mix</div>
+          <div class="chart-title-row">
+            <div>
+              <h2>Product Collection</h2>
+              <p>สัดส่วนสินค้าตาม Series ของ GQ</p>
+            </div>
+          </div>
+          <div id="collectionDonut" class="donut-layout"></div>
+        </article>
+        <article class="mix-panel">
+          <div class="chart-kicker">Product Mix</div>
+          <div class="chart-title-row">
+            <div>
+              <h2>Product Category</h2>
+              <p>สัดส่วนสินค้าตามประเภทการใช้งาน</p>
+            </div>
+          </div>
+          <div id="categoryDonut" class="donut-layout"></div>
+        </article>
+        <article class="mix-panel treemap-panel">
+          <div class="chart-title-row">
+            <div>
+              <div class="chart-kicker">Portfolio Depth</div>
+              <h2>Top Sub-category Treemap</h2>
+              <p>15 Product Type หลัก โดยขนาดของบล็อกแสดงจำนวนรุ่นสินค้า</p>
+            </div>
+            <span class="chart-badge">กดบล็อกเพื่อกรอง</span>
+          </div>
+          <div id="subcategoryTreemap" class="treemap"></div>
+        </article>
+      </section>
+
+      <section class="split-layout">
+        <div>
+          <div class="section-heading product-list-heading">
+            <div><h2>รายการสินค้า</h2><span id="visibleCount">-</span></div>
+            <label class="page-size-control">
+              <span>แสดงต่อหน้า</span>
+              <select id="pageSizeSelect">
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+            </label>
+          </div>
+          <div id="productGrid"></div>
+          <nav class="pagination" id="pagination" aria-label="แบ่งหน้ารายการสินค้า"></nav>
+        </div>
+      </section>
+    </main>
+
+    <script src="data/gq_products.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

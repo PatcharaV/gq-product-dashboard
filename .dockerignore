@@ -1,0 +1,6 @@
+.git
+.gitignore
+node_modules
+*.png
+__pycache__
+*.pyc

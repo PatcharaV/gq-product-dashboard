@@ -1,0 +1,10 @@
+{
+  "name": "gqsize-product-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local website for GQSize product offering dashboard.",
+  "scripts": {
+    "start": "node server.js",
+    "scrape": "python scripts\\scrape_gqsize.py"
+  }
+}

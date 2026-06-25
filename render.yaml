@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: gq-product-dashboard
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    autoDeployTrigger: commit

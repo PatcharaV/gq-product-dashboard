@@ -1,0 +1,124 @@
+{
+  "checked_at": "2026-06-25T10:39:40.807992+00:00",
+  "storefront_linked_product_count": 121,
+  "api_product_count": 121,
+  "api_only_handles": [],
+  "storefront_only_handles": [],
+  "hidden_product_count": 2,
+  "excluded_non_clothing_count": 11,
+  "clothing_model_count": 108,
+  "product_color_row_count": 603,
+  "variant_count": 3267,
+  "excluded_products": [
+    {
+      "id": 7265321189565,
+      "title": "Biker Mask™ - Collections",
+      "handle": "gq-biker-mask-collections",
+      "product_type": "Biker Mask",
+      "reason": "Non-clothing product type: Biker Mask",
+      "url": "https://gqsize.com/products/gq-biker-mask-collections"
+    },
+    {
+      "id": 8288587972797,
+      "title": "Foldable Mirror",
+      "handle": "foldable-mirror",
+      "product_type": "Unspecified",
+      "reason": "Non-clothing title keyword: foldable mirror",
+      "url": "https://gqsize.com/products/foldable-mirror"
+    },
+    {
+      "id": 8288587677885,
+      "title": "GQ Light Shaver™",
+      "handle": "light-shaver",
+      "product_type": "Light Shaver",
+      "reason": "Non-clothing product type: Light Shaver",
+      "url": "https://gqsize.com/products/light-shaver"
+    },
+    {
+      "id": 8197336432829,
+      "title": "GQ Minimal Cap",
+      "handle": "minimal-cap",
+      "product_type": "Cap",
+      "reason": "Non-clothing product type: Cap",
+      "url": "https://gqsize.com/products/minimal-cap"
+    },
+    {
+      "id": 8282056360125,
+      "title": "GQ Pro MED \"The Wearable Love\" Gift Set",
+      "handle": "promed-gift-set",
+      "product_type": "Scrub Bear Gift",
+      "reason": "Non-clothing product type: Scrub Bear Gift",
+      "url": "https://gqsize.com/products/promed-gift-set"
+    },
+    {
+      "id": 7973872271549,
+      "title": "GQ Pro Med Lanyard",
+      "handle": "gq-promed-lanyard",
+      "product_type": "Lanyard",
+      "reason": "Non-clothing product type: Lanyard",
+      "url": "https://gqsize.com/products/gq-promed-lanyard"
+    },
+    {
+      "id": 8182812377277,
+      "title": "GQ PROTECTION PM 2.5  2-Pack",
+      "handle": "gq-protection-pm-2-5",
+      "product_type": "Mask",
+      "reason": "Non-clothing product type: Mask",
+      "url": "https://gqsize.com/products/gq-protection-pm-2-5"
+    },
+    {
+      "id": 8221887168701,
+      "title": "GQ Smart Clean",
+      "handle": "smart-clean",
+      "product_type": "SMART Clean",
+      "reason": "Non-clothing product type: SMART Clean",
+      "url": "https://gqsize.com/products/smart-clean"
+    },
+    {
+      "id": 8261100929213,
+      "title": "GQ x PEANUTS™ Baseball Cap",
+      "handle": "peanuts-baseball-cap",
+      "product_type": "Unspecified",
+      "reason": "Non-clothing title keyword: baseball cap",
+      "url": "https://gqsize.com/products/peanuts-baseball-cap"
+    },
+    {
+      "id": 8261093261501,
+      "title": "GQ x PEANUTS™ Canvas Tote",
+      "handle": "peanuts-canvas-tote",
+      "product_type": "Unspecified",
+      "reason": "Non-clothing title keyword: canvas tote",
+      "url": "https://gqsize.com/products/peanuts-canvas-tote"
+    },
+    {
+      "id": 7265324105917,
+      "title": "GQMax™ Mask",
+      "handle": "gqmax™-collection",
+      "product_type": "Mask",
+      "reason": "Non-clothing product type: Mask",
+      "url": "https://gqsize.com/products/gqmax™-collection"
+    },
+    {
+      "id": 8211313721533,
+      "title": "Item Personalization",
+      "handle": "item-personalization",
+      "product_type": "PPLR_HIDDEN_PRODUCT",
+      "reason": "Hidden personalization item",
+      "url": "https://gqsize.com/products/item-personalization"
+    },
+    {
+      "id": 8211313754301,
+      "title": "Item Personalization",
+      "handle": "item-personalization-1",
+      "product_type": "PPLR_HIDDEN_PRODUCT",
+      "reason": "Hidden personalization item",
+      "url": "https://gqsize.com/products/item-personalization-1"
+    }
+  ],
+  "recommendation_collection_counts": {
+    "new": 107,
+    "bestseller": 107,
+    "bearsize": 15,
+    "scrubs": 16
+  }
+}
