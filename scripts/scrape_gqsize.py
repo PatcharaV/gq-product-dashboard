@@ -210,10 +210,169 @@ def infer_series(title: str, product_type: str, tags: list[str]) -> str:
 
 def infer_function(title: str, product_type: str, tags: list[str], description: str = "") -> str:
     haystack = " ".join([title, product_type, description, *tags]).lower()
+    title_text = title.lower()
+    type_text = product_type.lower()
+    if any(keyword in type_text for keyword in ["pants", "jeans", "shorts", "chino"]):
+        return "Bottoms"
+    if any(keyword in title_text for keyword in ["pants", "jeans", "shorts", "chino"]):
+        return "Bottoms"
     for group, keywords in FUNCTION_RULES:
         if any(keyword in haystack for keyword in keywords):
             return group
     return "Other"
+
+
+def infer_subcategory(title: str, product_type: str, series: str, function: str) -> str:
+    haystack = " ".join([title, product_type, series, function]).lower()
+    compact = haystack.replace(" ", "").replace("-", "")
+    title_text = title.lower()
+
+    if "perfect" in title_text and "oxford" in title_text:
+        return "Perfect Oxford Shirt"
+    if "gqwhite" in title_text:
+        return "GQWhite Shirt"
+    if "peanuts" in title_text and "boxy" in title_text:
+        return "PEANUTS Boxy Shirt"
+    if "minimal jeans" in title_text and "boot" in title_text:
+        return "Minimal Jeans Boot Cut"
+    if "the good day lab" in title_text:
+        if "t-shirt" in title_text and "pack2" in title_text:
+            return "Good Day Lab Kids T-Shirt Pack"
+        if "t-shirt" in title_text:
+            return "Good Day Lab Kids T-Shirt"
+        if "long sleeve polo" in title_text and "pack2" in title_text:
+            return "Good Day Lab Long Sleeve Polo Pack"
+        if "long sleeve polo" in title_text:
+            return "Good Day Lab Long Sleeve Polo"
+        if "polo" in title_text and "pack2" in title_text:
+            return "Good Day Lab Polo Pack"
+        if "polo" in title_text and "no package" in title_text:
+            return "Good Day Lab Polo No Package"
+        if "polo" in title_text:
+            return "Good Day Lab Polo"
+    if "women scrub pants" in title_text and "elite" in title_text:
+        return "Scrub Pants Elite Women"
+    if "men scrub pants" in title_text and "elite" in title_text:
+        return "Scrub Pants Elite Men"
+    if "women scrub pants" in title_text and "premium" in title_text:
+        return "Scrub Pants Premium Women"
+    if "men scrub pants" in title_text and "premium" in title_text:
+        return "Scrub Pants Premium Men"
+    if "women scrub shirt" in title_text and "elite" in title_text:
+        return "Scrub Shirt Elite Women"
+    if "men scrub shirt" in title_text and "elite" in title_text:
+        return "Scrub Shirt Elite Men"
+    if "women scrub shirt" in title_text and "premium" in title_text:
+        return "Scrub Shirt Premium Women"
+    if "men scrub shirt" in title_text and "premium" in title_text:
+        return "Scrub Shirt Premium Men"
+    if "women scrub polo" in title_text:
+        return "Scrub Polo Women"
+    if "men scrub polo" in title_text:
+        return "Scrub Polo Men"
+    if "underscrub" in title_text and "women" in title_text:
+        return "Underscrub Women"
+    if "underscrub" in title_text and "men" in title_text:
+        return "Underscrub Men"
+    if "women scrub jacket" in title_text and "elite" in title_text:
+        return "Scrub Jacket Elite Women"
+    if "men scrub jacket" in title_text and "elite" in title_text:
+        return "Scrub Jacket Elite Men"
+
+    rules = [
+        ("Perfect Oxford Shirt", ["perfect oxford", "perfectoxford", "gqoxford"]),
+        ("GQWhite Shirt", ["gqwhite"]),
+        ("Bear Size Oxford Shirt", ["bear size oxford"]),
+        ("Cool Tech Denim Shirt", ["cool tech denim"]),
+        ("PEANUTS Boxy Shirt", ["peanuts boxy"]),
+        ("Summer Print Shirt", ["summer print shirt"]),
+        ("Summer Aloha T-Shirt", ["summer t-shirt aloha"]),
+        ("Smart T-Shirt", ["smart t-shirt"]),
+        ("Cool Tech T-Shirt Pocket", ["t-shirt pocket"]),
+        ("Cool Tech T-Shirt Regular Print", ["regular t-shirt print"]),
+        ("Cool Tech T-Shirt Regular", ["regular t-shirt"]),
+        ("Cool Tech T-Shirt Oversized Print", ["oversized t-shirt print"]),
+        ("Cool Tech T-Shirt Oversized", ["oversized t-shirt"]),
+        ("Cool Tech PEANUTS T-Shirt", ["peanuts", "cool tech", "t-shirt"]),
+        ("PEANUTS Everyday T-Shirt", ["everyday", "peanuts"]),
+        ("Good Day Lab Kids T-Shirt Pack", ["good day lab", "t-shirt", "pack"]),
+        ("Good Day Lab Kids T-Shirt", ["good day lab", "kids", "t-shirt"]),
+        ("Good Day Lab Polo Pack", ["good day lab", "polo", "pack"]),
+        ("Good Day Lab Long Sleeve Polo", ["good day lab", "long sleeve polo"]),
+        ("Good Day Lab Polo", ["good day lab", "polo"]),
+        ("Minimal Polo PEANUTS", ["minimal polo", "peanuts"]),
+        ("Minimal Polo Stripe", ["minimal polo", "stripe"]),
+        ("Minimal Polo", ["minimal polo"]),
+        ("Perfect Polo Classic", ["perfect polo", "classic"]),
+        ("Perfect Polo Limited", ["perfect polo", "limited"]),
+        ("Perfect Polo Twin Tipped", ["perfect polo", "twin tipped"]),
+        ("Bear Size Sport T-Shirt", ["bear size sports t-shirt", "bear size sport t-shirt"]),
+        ("Bear Size Running T-Shirt", ["running", "training", "t-shirt"]),
+        ("Bear Size Running Tank Top", ["running", "training", "tank"]),
+        ("Bear Size Sport Polo", ["bear size sports polo", "bear size sport polo"]),
+        ("Bear Size Polo", ["bear size polo"]),
+        ("Bear Size T-Shirt", ["bear size t-shirt"]),
+        ("Minimal Hoodie UV", ["hoodie uv"]),
+        ("Minimal Hoodie", ["hoodie"]),
+        ("Cool Tech Innerwear Short Sleeve", ["innerwear", "short sleeve"]),
+        ("Cool Tech Innerwear Tank Top", ["innerwear", "tank top"]),
+        ("Cool Tech Loungewear Long Sleeve", ["loungewear", "long sleeve"]),
+        ("Cool Tech Loungewear T-Shirt", ["loungewear", "t-shirt"]),
+        ("Cool Tech Loungewear Shorts", ["loungewear", "shorts"]),
+        ("Cool Tech Loungewear Pants", ["loungewear", "pants"]),
+        ("Cool Tech Jeans Shorts", ["jean shorts"]),
+        ("Cool Tech Jeans Boot Cut", ["jeans", "boot cut"]),
+        ("Cool Tech Jeans Regular", ["jeans", "regular"]),
+        ("Cool Tech Jeans Slim", ["jeans", "slim"]),
+        ("Cool Tech Jeans Straight", ["jeans", "straight"]),
+        ("Cool Tech Jeans Tapered", ["jeans", "tapered"]),
+        ("Minimal Jeans Boot Cut", ["minimal jeans", "boot cut"]),
+        ("Minimal Jeans Classic", ["minimal jeans", "classic"]),
+        ("Minimal Jeans Relaxed", ["minimal jeans", "relaxed"]),
+        ("Minimal Jeans Skinny", ["minimal jeans", "skinny"]),
+        ("Minimal Jeans Wide", ["minimal jeans", "wide"]),
+        ("Perfect Chino Ankle", ["perfect ankle chino", "chino ankle"]),
+        ("Perfect Chino Shorts", ["chino", "shorts"]),
+        ("Perfect Chino", ["perfect chino"]),
+        ("Perfect Pants Regular", ["perfect pants", "regular"]),
+        ("Perfect Pants Relaxed", ["perfect pants", "relaxed"]),
+        ("Perfect Pleated Pants", ["perfect pleated"]),
+        ("Perfect Shorts", ["perfect shorts"]),
+        ("Performance Pants", ["performance pants"]),
+        ("Bear Size Work Pants", ["bear size work pants"]),
+        ("Bear Size Shorts", ["bear size shorts"]),
+        ("Bear Size Sport Shorts", ["bear size sports shorts", "bear size sport shorts"]),
+        ("Bear Size Kai Underwear Comfort", ["hor kai comfort"]),
+        ("Bear Size Kai Underwear Soft", ["kai noom"]),
+        ("Bear Size Cool Tech Underwear Extreme", ["bear size cool tech", "underwear"]),
+        ("Cool Tech Boxer", ["boxer"]),
+        ("Cool Tech Underwear All-Day", ["all-day secure"]),
+        ("Cool Tech Underwear New Normal", ["new normal"]),
+        ("Cool Tech Underwear Sports", ["sports collection"]),
+        ("Cool Tech Underwear Extreme", ["cool tech", "extreme"]),
+        ("Perfect Blazer Relaxed", ["blazer", "relaxed"]),
+        ("Perfect Blazer Slim", ["blazer", "slim"]),
+        ("Performance Blazer", ["performance blazer"]),
+        ("Jean Jacket", ["jean jacket"]),
+        ("Scrub Jacket Elite Men", ["men scrub jacket", "elite"]),
+        ("Scrub Jacket Elite Women", ["women scrub jacket", "elite"]),
+        ("Scrub Jacket Premium", ["scrub premium jacket", "premium scrub jacket"]),
+        ("Scrub Pants Premium Men", ["men scrub pants", "premium"]),
+        ("Scrub Pants Premium Women", ["women scrub pants", "premium"]),
+        ("Scrub Pants Elite Men", ["men scrub pants", "elite"]),
+        ("Scrub Pants Elite Women", ["women scrub pants", "elite"]),
+        ("Scrub Shirt Premium Men", ["men scrub shirt", "premium"]),
+        ("Scrub Shirt Premium Women", ["women scrub shirt", "premium"]),
+        ("Scrub Shirt Elite Women", ["women scrub shirt", "elite"]),
+        ("Scrub Polo Men", ["men scrub polo"]),
+        ("Scrub Polo Women", ["women scrub polo"]),
+        ("Underscrub Men", ["underscrub", "men"]),
+        ("Underscrub Women", ["underscrub", "women"]),
+    ]
+    for label, keywords in rules:
+        if all(keyword in haystack or keyword.replace(" ", "") in compact for keyword in keywords):
+            return label
+    return product_type if product_type and product_type != "Unspecified" else f"{series} {function}".strip()
 
 
 def infer_brand(title: str, product_type: str, tags: list[str]) -> str:
@@ -373,6 +532,7 @@ def normalize_colorway(
     function = official_function or (
         "Bottoms" if inferred_function == "Underwear" else inferred_function
     )
+    series = infer_series(title, product_type, tags)
     return {
         "id": f"{product.get('id')}-{color}",
         "source_product_id": product.get("id"),
@@ -395,8 +555,9 @@ def normalize_colorway(
         ),
         "brand": infer_brand(title, product_type, tags),
         "function": function,
-        "series": infer_series(title, product_type, tags),
+        "series": series,
         "product_type": product_type,
+        "product_subcategory": infer_subcategory(title, product_type, series, function),
         "description": plain_description,
         "material": material_for_color(material, color),
         "tags": tags,
@@ -493,6 +654,7 @@ def write_csv(products: list[dict[str, Any]]) -> None:
         "function",
         "series",
         "product_type",
+        "product_subcategory",
         "material",
         "availability",
         "variant_count",

@@ -39,6 +39,10 @@ function uniqueValues(key) {
     .sort((a, b) => a.localeCompare(b));
 }
 
+function subcategoryOf(item) {
+  return item.product_subcategory || item.product_type || "Unspecified";
+}
+
 function uniqueInnovations() {
   return [...new Set(products.flatMap((item) => item.features || []))]
     .sort((a, b) => a.localeCompare(b));
@@ -113,7 +117,7 @@ function filteredProducts(excludeKey = "") {
   const query = state.search.trim().toLowerCase();
   return products.filter((item) => {
     const searchable = [
-      item.title, item.brand, item.function, item.series, item.product_type, item.description, item.material,
+      item.title, item.brand, item.function, item.series, item.product_subcategory, item.product_type, item.description, item.material,
       ...(item.features || []),
       ...(item.colors || []),
       ...(item.innovations || []).flatMap((i) => [i.category, i.benefit, i.evidence]),
@@ -121,7 +125,7 @@ function filteredProducts(excludeKey = "") {
     return (!query || searchable.includes(query))
       && (excludeKey === "function" || !state.function || item.function === state.function)
       && (excludeKey === "series" || !state.series || item.series === state.series)
-      && (excludeKey === "productType" || !state.productType || item.product_type === state.productType)
+      && (excludeKey === "productType" || !state.productType || subcategoryOf(item) === state.productType)
       && (!state.innovation || (item.features || []).includes(state.innovation))
       && (!state.recommended || (item.recommendation_groups || []).includes(state.recommended))
       && (!state.stock || item.availability === state.stock);
@@ -468,7 +472,8 @@ function renderProducts(items) {
       <td>
         <strong class="cell-primary">${escapeHtml(item.function)}</strong>
         <span class="cell-secondary">${escapeHtml(item.series)}</span>
-        <span class="cell-secondary">${escapeHtml(item.product_type)}</span>
+        <span class="cell-secondary">${escapeHtml(subcategoryOf(item))}</span>
+        <span class="cell-tertiary">${escapeHtml(item.product_type)}</span>
       </td>
       <td class="material-cell">
         <span title="${escapeHtml(item.materials.join(", ") || "ไม่ระบุ")}">
@@ -544,7 +549,7 @@ function render() {
     "PRODUCTS",
     "function"
   );
-  renderTreemap(els.subcategoryTreemap, countProductsBy(subcategoryContext, "product_type"));
+  renderTreemap(els.subcategoryTreemap, countProductsBy(subcategoryContext, "product_subcategory"));
   renderProducts(items);
 }
 
