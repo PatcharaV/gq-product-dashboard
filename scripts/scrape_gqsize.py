@@ -27,7 +27,7 @@ RECOMMENDATION_COLLECTIONS = {
     "scrubs": ("ชุดสครับ", "promed"),
 }
 FUNCTION_COLLECTIONS = {
-    "Underwear": "cool-tech-underwear",
+    "Underwear": "underwear",
 }
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
