@@ -158,7 +158,7 @@ const chartColors = [
 ];
 
 const websiteOrder = {
-  function: ["Tops", "Bottoms", "Underwear & Socks", "Suits & Jackets"],
+  function: ["Tops", "Bottoms", "Underwear", "Suits & Jackets"],
   series: ["Cool Tech", "Smellblock", "Perfect", "Minimal", "GQWhite", "ProMED", "Performance", "Smart", "GQMax", "Summer", "Sport", "Bear Size", "Other"],
 };
 

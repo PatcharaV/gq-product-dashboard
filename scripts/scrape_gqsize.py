@@ -34,7 +34,7 @@ FUNCTION_RULES = [
     ("Suits & Jackets", ["suit", "jacket", "blazer", "แจ็กเก็ต", "สูท"]),
     ("Tops", ["shirt", "polo", "t-shirt", "tank", "sleeves", "sleeveless", "jersey", "hoodie", "underscrub", "oxford", "เสื้อ"]),
     ("Bottoms", ["pants", "jeans", "shorts", "trousers", "chino", "กางเกง"]),
-    ("Underwear & Socks", ["boxer", "cool tech", "socks", "underwear", "trunk", "ถุงเท้า"]),
+    ("Underwear", ["boxer", "cool tech", "underwear", "trunk"]),
 ]
 
 NON_CLOTHING_TYPES = {
@@ -46,6 +46,8 @@ NON_CLOTHING_TYPES = {
     "PPLR_HIDDEN_PRODUCT",
     "SMART Clean",
     "Scrub Bear Gift",
+    "Sock Every day",
+    "Sock Work Day",
 }
 
 NON_CLOTHING_TITLE_KEYWORDS = [
@@ -56,6 +58,7 @@ NON_CLOTHING_TITLE_KEYWORDS = [
     "lanyard",
     "light shaver",
     "smart clean",
+    "sock",
     "wearable love",
 ]
 

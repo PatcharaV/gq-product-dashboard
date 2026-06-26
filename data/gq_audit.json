@@ -1,14 +1,14 @@
 {
-  "checked_at": "2026-06-25T10:39:40.807992+00:00",
+  "checked_at": "2026-06-26T01:31:57.410611+00:00",
   "storefront_linked_product_count": 121,
   "api_product_count": 121,
   "api_only_handles": [],
   "storefront_only_handles": [],
   "hidden_product_count": 2,
-  "excluded_non_clothing_count": 11,
-  "clothing_model_count": 108,
-  "product_color_row_count": 603,
-  "variant_count": 3267,
+  "excluded_non_clothing_count": 18,
+  "clothing_model_count": 101,
+  "product_color_row_count": 540,
+  "variant_count": 3161,
   "excluded_products": [
     {
       "id": 7265321189565,
@@ -91,6 +91,14 @@
       "url": "https://gqsize.com/products/peanuts-canvas-tote"
     },
     {
+      "id": 8281563529405,
+      "title": "GQ x PEANUTS™ Socks",
+      "handle": "peanuts-socks",
+      "product_type": "Unspecified",
+      "reason": "Non-clothing title keyword: sock",
+      "url": "https://gqsize.com/products/peanuts-socks"
+    },
+    {
       "id": 7265324105917,
       "title": "GQMax™ Mask",
       "handle": "gqmax™-collection",
@@ -113,6 +121,54 @@
       "product_type": "PPLR_HIDDEN_PRODUCT",
       "reason": "Hidden personalization item",
       "url": "https://gqsize.com/products/item-personalization-1"
+    },
+    {
+      "id": 7625143025853,
+      "title": "SMELLBLOCK™ Socks - Every Day No Show Collection",
+      "handle": "smellblock-socks-every-day-no-show-collection",
+      "product_type": "Sock Every day",
+      "reason": "Non-clothing product type: Sock Every day",
+      "url": "https://gqsize.com/products/smellblock-socks-every-day-no-show-collection"
+    },
+    {
+      "id": 8001960575165,
+      "title": "SMELLBLOCK™ Socks - Fresh Cushion",
+      "handle": "gq-smellblock-socks-fresh-cushion",
+      "product_type": "Sock Work Day",
+      "reason": "Non-clothing product type: Sock Work Day",
+      "url": "https://gqsize.com/products/gq-smellblock-socks-fresh-cushion"
+    },
+    {
+      "id": 7480783536317,
+      "title": "SMELLBLOCK™ Socks Every Day Ankle Collection",
+      "handle": "smellblock-socks-every-day-ankle-collection",
+      "product_type": "Sock Every day",
+      "reason": "Non-clothing product type: Sock Every day",
+      "url": "https://gqsize.com/products/smellblock-socks-every-day-ankle-collection"
+    },
+    {
+      "id": 7472782344381,
+      "title": "SMELLBLOCK™ Socks Every Day Crew Collection",
+      "handle": "smellblock-sock-every-day-crew-collection",
+      "product_type": "Sock Every day",
+      "reason": "Non-clothing product type: Sock Every day",
+      "url": "https://gqsize.com/products/smellblock-sock-every-day-crew-collection"
+    },
+    {
+      "id": 7472777461949,
+      "title": "SMELLBLOCK™ Socks Work Day Collection",
+      "handle": "smellblock-sock-work-day-collection",
+      "product_type": "Sock Work Day",
+      "reason": "Non-clothing product type: Sock Work Day",
+      "url": "https://gqsize.com/products/smellblock-sock-work-day-collection"
+    },
+    {
+      "id": 8076018909373,
+      "title": "SMELLBLOCK™ Socks โปรถุงเท้า คู่ละ 99.-",
+      "handle": "smellblock™-socks-โปรถุงเท้า-คู่ละ-99",
+      "product_type": "Sock Work Day",
+      "reason": "Non-clothing product type: Sock Work Day",
+      "url": "https://gqsize.com/products/smellblock™-socks-โปรถุงเท้า-คู่ละ-99"
     }
   ],
   "recommendation_collection_counts": {
