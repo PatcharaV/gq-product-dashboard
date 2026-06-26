@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-06-26T01:31:57.410611+00:00",
+  "checked_at": "2026-06-26T03:08:02.732427+00:00",
   "storefront_linked_product_count": 121,
   "api_product_count": 121,
   "api_only_handles": [],
@@ -176,5 +176,8 @@
     "bestseller": 107,
     "bearsize": 15,
     "scrubs": 16
+  },
+  "function_collection_counts": {
+    "Underwear": 4
   }
 }

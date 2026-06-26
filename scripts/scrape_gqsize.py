@@ -26,6 +26,9 @@ RECOMMENDATION_COLLECTIONS = {
     "bearsize": ("ไซส์หมี", "bearsize"),
     "scrubs": ("ชุดสครับ", "promed"),
 }
+FUNCTION_COLLECTIONS = {
+    "Underwear": "cool-tech-underwear",
+}
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 
@@ -34,7 +37,7 @@ FUNCTION_RULES = [
     ("Suits & Jackets", ["suit", "jacket", "blazer", "แจ็กเก็ต", "สูท"]),
     ("Tops", ["shirt", "polo", "t-shirt", "tank", "sleeves", "sleeveless", "jersey", "hoodie", "underscrub", "oxford", "เสื้อ"]),
     ("Bottoms", ["pants", "jeans", "shorts", "trousers", "chino", "กางเกง"]),
-    ("Underwear", ["boxer", "cool tech", "underwear", "trunk"]),
+    ("Underwear", ["boxer", "underwear", "trunk"]),
 ]
 
 NON_CLOTHING_TYPES = {
@@ -342,6 +345,7 @@ def normalize_colorway(
     plain_description: str,
     innovations: list[dict[str, str]],
     recommendation_handles: dict[str, set[str]],
+    function_handles: dict[str, set[str]],
     material: str,
 ) -> dict[str, Any]:
     prices = [money(v.get("price")) for v in variants]
@@ -360,28 +364,37 @@ def normalize_colorway(
     tags = product.get("tags") or []
     images = product.get("images") or []
     first_variant_id = variants[0].get("id") if variants else None
+    handle = product.get("handle")
+    inferred_function = infer_function(title, product_type, tags, plain_description)
+    official_function = next(
+        (name for name, handles in function_handles.items() if handle in handles),
+        None,
+    )
+    function = official_function or (
+        "Bottoms" if inferred_function == "Underwear" else inferred_function
+    )
     return {
         "id": f"{product.get('id')}-{color}",
         "source_product_id": product.get("id"),
         "title": title,
         "color": color,
-        "handle": product.get("handle"),
+        "handle": handle,
         "recommendation_groups": [
             key
             for key, handles in recommendation_handles.items()
-            if product.get("handle") in handles
+            if handle in handles
         ],
         "recommended": any(
-            product.get("handle") in handles
+            handle in handles
             for handles in recommendation_handles.values()
         ),
         "url": (
-            f"{BASE_URL}/products/{product.get('handle')}?variant={first_variant_id}"
+            f"{BASE_URL}/products/{handle}?variant={first_variant_id}"
             if first_variant_id
-            else f"{BASE_URL}/products/{product.get('handle')}"
+            else f"{BASE_URL}/products/{handle}"
         ),
         "brand": infer_brand(title, product_type, tags),
-        "function": infer_function(title, product_type, tags, plain_description),
+        "function": function,
         "series": infer_series(title, product_type, tags),
         "product_type": product_type,
         "description": plain_description,
@@ -421,6 +434,7 @@ def normalize_colorway(
 def normalize_product(
     product: dict[str, Any],
     recommendation_handles: dict[str, set[str]],
+    function_handles: dict[str, set[str]],
     material: str,
 ) -> list[dict[str, Any]]:
     variants = product.get("variants") or []
@@ -439,6 +453,7 @@ def normalize_product(
             plain_description,
             innovations,
             recommendation_handles,
+            function_handles,
             material,
         )
         for color, color_variants in grouped.items()
@@ -522,6 +537,16 @@ def main() -> None:
         }
         for key, (_, handle) in RECOMMENDATION_COLLECTIONS.items()
     }
+    function_handles = {
+        key: {
+            product.get("handle")
+            for product in json.loads(
+                fetch_text(f"{BASE_URL}/collections/{handle}/products.json?limit=250")
+            ).get("products", [])
+            if product.get("handle")
+        }
+        for key, handle in FUNCTION_COLLECTIONS.items()
+    }
     raw_products = raw.get("products", [])
     storefront_handles = storefront_product_handles()
     api_handles = {product.get("handle") for product in raw_products if product.get("handle")}
@@ -545,6 +570,7 @@ def main() -> None:
         for colorway in normalize_product(
             product,
             recommendation_handles,
+            function_handles,
             materials.get(product.get("handle"), ""),
         )
     ]
@@ -571,6 +597,10 @@ def main() -> None:
         "recommendation_collection_counts": {
             key: len(handles)
             for key, handles in recommendation_handles.items()
+        },
+        "function_collection_counts": {
+            key: len(handles)
+            for key, handles in function_handles.items()
         },
     }
     payload = {
