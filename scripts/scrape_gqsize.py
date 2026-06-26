@@ -83,11 +83,21 @@ SERIES_RULES = [
 
 INNOVATION_RULES = [
     ("COOL TECH", "Cooling", "ช่วยจัดการความร้อนและเพิ่มความสบายขณะสวมใส่",
-     [r"cool\s*tech", r"เย็นสบาย", r"สัมผัสเย็น"]),
+     [r"cool\s*tech", r"ผ้าเย็น", r"เย็นลงสูงสุด", r"ลดอุณหภูมิ", r"เจลเย็น", r"เย็นทั้งตัว"]),
     ("SMELLBLOCK", "Odor control", "ช่วยลดหรือควบคุมกลิ่นไม่พึงประสงค์",
      [r"smell\s*block", r"smellblock", r"anti[-\s]?odor", r"ลดกลิ่น", r"ระงับกลิ่น"]),
     ("Water & Stain Repellent", "Protection", "ช่วยสะท้อนน้ำ ลดการเกาะของคราบ และดูแลรักษาง่าย",
      [r"repeltech", r"สะท้อนน้ำ", r"กันน้ำ", r"กันเปื้อน", r"คราบ.*ล้างออกง่าย"]),
+    ("GQ SWEAT DELETE", "Sweat management", "ช่วยซับเหงื่อด้านในและลดคราบเหงื่อซึมตามคำอธิบายสินค้า",
+     [r"gq\s*sweat\s*delete", r"sweat\s*delete", r"กันคราบเหงื่อ", r"ลดคราบเหงื่อ", r"ซับเหงื่อ"]),
+    ("GQ FIT-PRO COLLAR", "Fit innovation", "คอเสื้อโอบพอดีกับรูปคอ ช่วยให้ดูสมาร์ทและกระชับ",
+     [r"gq\s*fit[-\s]?pro\s*collar", r"fit[-\s]?pro\s*collar", r"คอเสื้อโอบพอดี", r"คอเสื้อ.*กระชับ"]),
+    ("GQ ANTI-RIP", "Durability", "เสริมจุดตะเข็บหรือโครงสร้างเพื่อลดโอกาสฉีกขาด",
+     [r"gq\s*anti[-\s]?rip", r"anti[-\s]?rip", r"ป้องกันการฉีกขาด", r"เสริมผ้าตะเข็บ"]),
+    ("GQ STRONG BUTTONS", "Durability", "กระดุมแน่นและหลุดยากตามคำอธิบายสินค้า",
+     [r"gq\s*strong\s*buttons?", r"strong\s*buttons?", r"กระดุมแน่น", r"หลุดยาก"]),
+    ("GQ BUFFET BUTTON", "Adjustable fit", "กระดุมบุฟเฟต์ที่ช่วยขยายหรือปรับ fit ได้",
+     [r"gq\s*buffet\s*buttons?", r"buffet\s*buttons?", r"กระดุมบุฟเฟต์", r"กระดุม.*ขยายได้"]),
     ("Wrinkle Resistant", "Easy care", "ช่วยลดรอยยับและลดภาระในการรีด",
      [r"wrinkleless", r"wrinkle[-\s]?free", r"ไม่ยับ", r"ลดรอยยับ", r"รีดง่าย"]),
     ("UV Protection", "Protection", "ช่วยปกป้องผิวจากรังสี UV ตามคำอธิบายของสินค้า",
@@ -135,12 +145,15 @@ def fetch_text(url: str) -> str:
 def strip_html(value: str | None) -> str:
     if not value:
         return ""
+    value = re.sub(r"<script\b[^>]*>.*?</script>", " ", value, flags=re.I | re.S)
+    value = re.sub(r"<style\b[^>]*>.*?</style>", " ", value, flags=re.I | re.S)
+    value = re.sub(r"<noscript\b[^>]*>.*?</noscript>", " ", value, flags=re.I | re.S)
     text = re.sub(r"<br\s*/?>", " ", value, flags=re.I)
     text = re.sub(r"<[^>]+>", " ", text)
     return re.sub(r"\s+", " ", html.unescape(text)).strip()
 
 
-def extract_material_from_page(handle: str) -> str:
+def extract_product_page_details(handle: str) -> dict[str, str]:
     page_html = fetch_text(f"{BASE_URL}/products/{handle}")
     plain_text = strip_html(page_html)
     match = re.search(
@@ -148,27 +161,60 @@ def extract_material_from_page(handle: str) -> str:
         plain_text,
         flags=re.I,
     )
-    if not match:
-        return ""
-    material = re.sub(r"\s+", " ", match.group(1)).strip(" -|,.;")
-    return material if len(material) <= 600 else ""
+    material = ""
+    if match:
+        material = re.sub(r"\s+", " ", match.group(1)).strip(" -|,.;")
+        if len(material) > 600:
+            material = ""
+    return {"material": material, "page_text": relevant_product_text(plain_text)}
 
 
-def fetch_materials(products: list[dict[str, Any]]) -> dict[str, str]:
+def relevant_product_text(plain_text: str) -> str:
+    segments: list[str] = []
+
+    innovation_start = plain_text.find("นวัตกรรม GQ ในสินค้าชิ้นนี้")
+    if innovation_start >= 0:
+        innovation_end_candidates = [
+            plain_text.find(marker, innovation_start + 1)
+            for marker in ["Bestsellers", "Product Spec", "รายละเอียด สินค้า"]
+        ]
+        innovation_end_candidates = [index for index in innovation_end_candidates if index > innovation_start]
+        innovation_end = min(innovation_end_candidates) if innovation_end_candidates else innovation_start + 900
+        segments.append(plain_text[innovation_start:innovation_end])
+
+    spec_start_candidates = [
+        plain_text.find(marker)
+        for marker in ["Product Spec", "รายละเอียด สินค้า", "Description"]
+    ]
+    spec_start_candidates = [index for index in spec_start_candidates if index >= 0]
+    if spec_start_candidates:
+        spec_start = min(spec_start_candidates)
+        spec_end_candidates = [
+            plain_text.find(marker, spec_start + 1)
+            for marker in ["ควรทำดูแลรักษา", "วิธีที่แนะนำในการดูแลรักษา", "ตารางไซซ์", "Size Guide"]
+        ]
+        spec_end_candidates = [index for index in spec_end_candidates if index > spec_start]
+        spec_end = min(spec_end_candidates) if spec_end_candidates else spec_start + 2500
+        segments.append(plain_text[spec_start:spec_end])
+
+    return " | ".join(segments) if segments else plain_text[:3500]
+
+
+def fetch_product_page_details(products: list[dict[str, Any]]) -> dict[str, dict[str, str]]:
     handles = [product.get("handle") for product in products if product.get("handle")]
-    materials: dict[str, str] = {}
+    details: dict[str, dict[str, str]] = {}
     with ThreadPoolExecutor(max_workers=8) as executor:
         futures = {
-            executor.submit(extract_material_from_page, handle): handle
+            executor.submit(extract_product_page_details, handle): handle
             for handle in handles
         }
         for future in as_completed(futures):
             handle = futures[future]
             try:
-                materials[handle] = future.result()
+                details[handle] = future.result()
             except Exception:
-                materials[handle] = ""
-    return materials
+                details[handle] = {"material": "", "page_text": ""}
+    return details
 
 
 def material_for_color(material: str, color: str) -> str:
@@ -438,8 +484,8 @@ def evidence_for_match(text: str, match: re.Match[str]) -> str:
     return ("..." if start else "") + evidence + ("..." if end < len(text) else "")
 
 
-def infer_innovations(product: dict[str, Any], plain_description: str) -> list[dict[str, str]]:
-    haystack = " | ".join(
+def infer_innovations(product: dict[str, Any], plain_description: str, detail_text: str = "") -> list[dict[str, str]]:
+    base_haystack = " | ".join(
         [
             product.get("title", ""),
             product.get("product_type", ""),
@@ -447,10 +493,12 @@ def infer_innovations(product: dict[str, Any], plain_description: str) -> list[d
             " ".join(product.get("tags") or []),
         ]
     )
+    haystack = " | ".join([base_haystack, detail_text])
     innovations = []
     for name, category, benefit, patterns in INNOVATION_RULES:
+        search_text = base_haystack if name == "Inclusive Size Design" else haystack
         match = next(
-            (found for pattern in patterns if (found := re.search(pattern, haystack, flags=re.I))),
+            (found for pattern in patterns if (found := re.search(pattern, search_text, flags=re.I))),
             None,
         )
         if match:
@@ -458,8 +506,8 @@ def infer_innovations(product: dict[str, Any], plain_description: str) -> list[d
                 "name": name,
                 "category": category,
                 "benefit": benefit,
-                "evidence": evidence_for_match(haystack, match),
-                "source": "Product title, description or tags",
+                "evidence": evidence_for_match(search_text, match),
+                "source": "Product title, PDP description or tags",
             })
     return innovations
 
@@ -596,7 +644,7 @@ def normalize_product(
     product: dict[str, Any],
     recommendation_handles: dict[str, set[str]],
     function_handles: dict[str, set[str]],
-    material: str,
+    page_detail: dict[str, str],
 ) -> list[dict[str, Any]]:
     variants = product.get("variants") or []
     position = color_option_position(product)
@@ -605,7 +653,8 @@ def normalize_product(
         color = variant_color(variant, position)
         grouped.setdefault(color, []).append(variant)
     plain_description = strip_html(product.get("body_html"))
-    innovations = infer_innovations(product, plain_description)
+    detail_text = page_detail.get("page_text", "")
+    innovations = infer_innovations(product, plain_description, detail_text)
     return [
         normalize_colorway(
             product,
@@ -615,7 +664,7 @@ def normalize_product(
             innovations,
             recommendation_handles,
             function_handles,
-            material,
+            page_detail.get("material", ""),
         )
         for color, color_variants in grouped.items()
     ]
@@ -725,7 +774,7 @@ def main() -> None:
         if exclusion_reason(product)
     ]
     visible_products = [product for product in raw_products if is_clothing(product)]
-    materials = fetch_materials(visible_products)
+    product_page_details = fetch_product_page_details(visible_products)
     products = [
         colorway
         for product in visible_products
@@ -733,7 +782,7 @@ def main() -> None:
             product,
             recommendation_handles,
             function_handles,
-            materials.get(product.get("handle"), ""),
+            product_page_details.get(product.get("handle"), {}),
         )
     ]
     products.sort(key=lambda p: (p["function"], p["series"], p["title"], p["color"]))
